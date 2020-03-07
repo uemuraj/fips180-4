@@ -6,8 +6,6 @@
 #include <bcrypt.h>
 
 #include <cstdint>
-#include <array>
-#include <memory>
 #include <vector>
 
 #if !defined(__cpp_inline_variables)
@@ -29,6 +27,6 @@ namespace sha
 		constexpr inline static std::size_t HASH_SIZE = 20;
 
 		void input(const std::uint8_t * data, std::size_t size);
-		void result(std::array<std::uint8_t, HASH_SIZE> & digest);
+		void result(std::uint8_t(&digest)[HASH_SIZE]);
 	};
 }

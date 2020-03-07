@@ -114,9 +114,9 @@ namespace sha
 		}
 	}
 
-	void sha1::result(std::array<std::uint8_t, HASH_SIZE> & digest)
+	void sha1::result(std::uint8_t(&digest)[HASH_SIZE])
 	{
-		if (auto status = ::BCryptFinishHash(m_hash, digest.data(), digest.size(), 0))
+		if (auto status = ::BCryptFinishHash(m_hash, digest, sizeof(digest), 0))
 		{
 			throw std::system_error(status, ntstatus_error_category(), "BCryptFinishHash()");
 		}

@@ -27,14 +27,14 @@ int main()
 	{
 		// TODO assert() でなく適当な例外を挙げてテストを続行するように
 
-		std::array<std::uint8_t, sha::sha1::HASH_SIZE> digest{};
+		std::uint8_t digest[sha::sha1::HASH_SIZE]{};
 
 		auto & [msg, md] = shav;
 		sha::sha1 hash;
 		hash.input(msg.data(), msg.size());
 		hash.result(digest);
 
-		assert(std::equal(md.cbegin(), md.cend(), digest.cbegin()));
+		assert(std::equal(md.cbegin(), md.cend(), digest));
 	}
 
 	return 0;
