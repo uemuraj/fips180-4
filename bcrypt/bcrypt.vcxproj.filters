@@ -5,6 +5,6 @@
     <ClCompile Include="..\shavs_byte_oriented.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\sha.h" />
+    <ClInclude Include="sha.h" />
   </ItemGroup>
 </Project>

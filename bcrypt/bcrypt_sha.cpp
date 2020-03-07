@@ -1,6 +1,12 @@
+#define _WIN32_WINNT _WIN32_WINNT_WIN7
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <bcrypt.h>
+
 #pragma comment (lib, "bcrypt")
 
 #include <sha.h>
+#include <vector>
 #include <cassert>
 #include <system_error>
 
@@ -73,9 +79,14 @@ bcrypt_algorithm & bcrypt_sha1_algorithm()
 	return algorithm;
 }
 
-namespace sha
+class bcrypt_sha1 : public sha::sha1
 {
-	sha1::sha1() : m_hash(nullptr)
+	BCRYPT_HASH_HANDLE m_hash;
+
+	std::vector<std::uint8_t> m_object;
+
+public:
+	bcrypt_sha1() : m_hash(nullptr)
 	{
 		auto & algorithm = bcrypt_sha1_algorithm();
 
@@ -101,12 +112,12 @@ namespace sha
 		}
 	}
 
-	sha1::~sha1()
+	~bcrypt_sha1()
 	{
 		::BCryptDestroyHash(m_hash);
 	}
 
-	void sha1::input(const std::uint8_t * data, std::size_t size)
+	void input(const std::uint8_t * data, std::size_t size) override
 	{
 		if (auto status = ::BCryptHashData(m_hash, const_cast<PUCHAR>(data), size, 0))
 		{
@@ -114,11 +125,11 @@ namespace sha
 		}
 	}
 
-	void sha1::result(std::array<std::uint8_t, HASH_SIZE> & digest)
+	void result(std::array<std::uint8_t, HASH_SIZE> & digest) override
 	{
 		if (auto status = ::BCryptFinishHash(m_hash, digest.data(), digest.size(), 0))
 		{
 			throw std::system_error(status, ntstatus_error_category(), "BCryptFinishHash()");
 		}
 	}
-}
+};

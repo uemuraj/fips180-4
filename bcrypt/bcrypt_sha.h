@@ -1,14 +1,9 @@
 #pragma once
 
-#define _WIN32_WINNT _WIN32_WINNT_WIN7
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <bcrypt.h>
-
 #include <cstdint>
 #include <array>
 #include <memory>
-#include <vector>
+#include <bcrypt.h>
 
 #if !defined(__cpp_inline_variables)
 #error
@@ -21,14 +16,13 @@ namespace sha
 		BCRYPT_HASH_HANDLE m_hash;
 
 		std::vector<std::uint8_t> m_object;
-
 	public:
-		sha1();
-		~sha1();
-
 		constexpr inline static std::size_t HASH_SIZE = 20;
 
-		void input(const std::uint8_t * data, std::size_t size);
-		void result(std::array<std::uint8_t, HASH_SIZE> & digest);
+		virtual void input(const std::uint8_t * data, std::size_t size) = 0;
+
+		virtual void result(std::array<std::uint8_t, HASH_SIZE> & digest) = 0;
+
+		virtual ~sha1() = default;
 	};
 }

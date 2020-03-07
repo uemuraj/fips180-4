@@ -17,7 +17,7 @@ std::vector<std::uint8_t> to_binary(const std::string & hex);
 #include <sstream>
 #include <cassert>
 
-#include "sha.h"
+#include <sha.h>
 
 int main()
 {
@@ -30,9 +30,9 @@ int main()
 		std::array<std::uint8_t, sha::sha1::HASH_SIZE> digest{};
 
 		auto & [msg, md] = shav;
-		auto sha1 = sha::make_sha1();
-		sha1->input(msg.data(), msg.size());
-		sha1->result(digest);
+		sha::sha1 hash;
+		hash.input(msg.data(), msg.size());
+		hash.result(digest);
 
 		assert(std::equal(md.cbegin(), md.cend(), digest.cbegin()));
 	}
